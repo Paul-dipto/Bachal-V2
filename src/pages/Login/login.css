@@ -23,6 +23,7 @@
 
 .log_input {
    margin-bottom: 16px;
+   position: relative;
 }
 
 .MuiTextField-root {
@@ -41,4 +42,11 @@
 .google_log {
    margin-bottom: 15px;
    cursor: pointer;
+}
+
+.log_eye {
+   position: absolute;
+   top: 54%;
+   right: 203px;
+   transform: translateY(-50%);
 }

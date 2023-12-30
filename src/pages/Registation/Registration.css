@@ -31,6 +31,7 @@
 
 .reg_input {
    margin-bottom: 16px;
+   position: relative;
 }
 
 .MuiTextField-root {
@@ -43,4 +44,11 @@
    font-weight: 400 !important;
    color: #fff !important;
    width: 60%;
+}
+
+.reg_eye {
+   position: absolute;
+   top: 54%;
+   right: 203px;
+   transform: translateY(-50%);
 }
