@@ -36,7 +36,8 @@
    font-weight: 400 !important;
    color: #fff !important;
    width: 60%;
-   border-top-right-radius: 5px;
+   border-top-right-radius: 5px !important;
+   margin-top: 15px !important;
 }
 
 .google_log {

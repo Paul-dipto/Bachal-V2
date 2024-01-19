@@ -117,7 +117,7 @@ const Registration = () => {
                         name="fullname"
                         label="Fullname"
                         variant="outlined"
-                        value={values.fullname}
+                        value={values.fullName}
                      />
                      {values.error.includes("full-name") && (
                         <Alert severity="error">{values.error}</Alert>

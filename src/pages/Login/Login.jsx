@@ -15,7 +15,7 @@ import {
    signInWithPopup,
 } from "firebase/auth";
 import google_log from "../../assets/google.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 let initialValues = {
@@ -23,12 +23,16 @@ let initialValues = {
    password: "",
    loading: false,
    eye: false,
+   error: "",
 };
 
 const Login = () => {
    let [values, setValues] = useState(initialValues);
+   let [error, setError] = useState("");
+
    const auth = getAuth();
    const provider = new GoogleAuthProvider();
+   let navigate = useNavigate();
 
    let handleValue = (e) => {
       setValues({
@@ -39,18 +43,50 @@ const Login = () => {
 
    let Handlesubmit = () => {
       let { email, password } = values;
+      if (!email) {
+         setValues({
+            ...values,
+            email: "",
+            error: "enter a email",
+         });
+         return;
+      }
+      if (!password) {
+         setValues({
+            ...values,
+            password: "",
+            error: "enter a password",
+         });
+         return;
+      }
       setValues({
          ...values,
          loading: true,
+         error: "",
       });
-      signInWithEmailAndPassword(auth, email, password).then((user) => {
-         setValues({
-            email: "",
-            password: "",
-            loading: false,
+      signInWithEmailAndPassword(auth, email, password)
+         .then((user) => {
+            // alert("successfull login");
+            setValues({
+               email: "",
+               password: "",
+               loading: false,
+            });
+
+            navigate("/home");
+         })
+         .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error("Firebase Error:", error);
+
+            setError(errorCode);
+            setValues({
+               ...values,
+               password: "",
+               loading: false,
+            });
          });
-         // navigate("/login");
-      });
    };
 
    let handleGoogleLogin = () => {
@@ -82,7 +118,18 @@ const Login = () => {
                         label="Email Address"
                         variant="outlined"
                      />
+
+                     {values.error.includes("email") && (
+                        <Alert severity="error">{values.error}</Alert>
+                     )}
                   </div>
+                  {error && (
+                     <Alert variant="filled" severity="error">
+                        {error.code === "auth/user-not-found" &&
+                           "User not found"}
+                        {!error.code && error.message}
+                     </Alert>
+                  )}
                   <div className="log_input">
                      <TextField
                         id="outlined-basic"
@@ -93,6 +140,10 @@ const Login = () => {
                         onChange={handleValue}
                         value={values.password}
                      />
+                     {values.error.includes("password") && (
+                        <Alert severity="error">{values.error}</Alert>
+                     )}
+
                      <div
                         onClick={() =>
                            setValues({ ...values, eye: !values.eye })
@@ -102,10 +153,24 @@ const Login = () => {
                         {values.eye ? <FaRegEye /> : <FaRegEyeSlash />}
                      </div>
                   </div>
+                  {error && (
+                     <Alert variant="filled" severity="error">
+                        {error.code === "auth/wrong-password" &&
+                           "Wrong password"}
+                        {!error.code && error.message}
+                     </Alert>
+                  )}
                   <Alert style={{ marginBottom: "12px" }} severity="info">
                      Not registerd ? Click here !{" "}
                      <strong>
                         <Link to="/">Registration</Link>
+                     </strong>
+                  </Alert>
+
+                  <Alert style={{ margintop: "12px" }} severity="error">
+                     Can't remember your password? Click here !{" "}
+                     <strong>
+                        <Link to="/forgot-password">Forgot-password</Link>
                      </strong>
                   </Alert>
                   {values.loading ? (
