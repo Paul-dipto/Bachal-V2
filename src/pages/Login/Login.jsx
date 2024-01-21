@@ -24,6 +24,8 @@ let initialValues = {
    loading: false,
    eye: false,
    error: "",
+   error2: "",
+   error3: "",
 };
 
 const Login = () => {
@@ -39,6 +41,8 @@ const Login = () => {
          ...values,
          [e.target.name]: e.target.value,
       });
+      setEmailErr(false);
+      setPassErr(false);
    };
 
    let Handlesubmit = () => {
@@ -48,6 +52,7 @@ const Login = () => {
             ...values,
             email: "",
             error: "enter a email",
+            error2: "",
          });
          return;
       }
@@ -56,6 +61,7 @@ const Login = () => {
             ...values,
             password: "",
             error: "enter a password",
+            error2: "",
          });
          return;
       }
@@ -78,11 +84,23 @@ const Login = () => {
          .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.error("Firebase Error:", error);
-
             setError(errorCode);
+            if (errorCode === "auth/user-not-found") {
+               setValues({
+                  ...values,
+                  email: "",
+                  loading: false,
+               });
+            } else if (errorCode === "auth/wrong-password") {
+               setValues({
+                  ...values,
+                  loading: false,
+                  password: "",
+               });
+            }
             setValues({
                ...values,
+               email: "",
                password: "",
                loading: false,
             });
@@ -122,14 +140,13 @@ const Login = () => {
                      {values.error.includes("email") && (
                         <Alert severity="error">{values.error}</Alert>
                      )}
+                     {error && (
+                        <Alert severity="error" variant="filled">
+                           {(error, "email does not exist")}
+                        </Alert>
+                     )}
                   </div>
-                  {error && (
-                     <Alert variant="filled" severity="error">
-                        {error.code === "auth/user-not-found" &&
-                           "User not found"}
-                        {!error.code && error.message}
-                     </Alert>
-                  )}
+
                   <div className="log_input">
                      <TextField
                         id="outlined-basic"
@@ -152,14 +169,14 @@ const Login = () => {
                      >
                         {values.eye ? <FaRegEye /> : <FaRegEyeSlash />}
                      </div>
+
+                     {error && (
+                        <Alert severity="error" variant="filled">
+                           {(error, "password does not match")}
+                        </Alert>
+                     )}
                   </div>
-                  {error && (
-                     <Alert variant="filled" severity="error">
-                        {error.code === "auth/wrong-password" &&
-                           "Wrong password"}
-                        {!error.code && error.message}
-                     </Alert>
-                  )}
+
                   <Alert style={{ marginBottom: "12px" }} severity="info">
                      Not registerd ? Click here !{" "}
                      <strong>

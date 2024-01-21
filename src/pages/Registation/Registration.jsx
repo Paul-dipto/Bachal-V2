@@ -39,7 +39,7 @@ const Registration = () => {
    };
 
    let Handlesubmit = () => {
-      let { email, fullname, password } = values;
+      let { email, fullName, password } = values;
 
       if (!email) {
          setValues({
@@ -48,7 +48,7 @@ const Registration = () => {
          });
          return;
       }
-      if (!fullname) {
+      if (!fullName) {
          setValues({
             ...values,
             error: "Enter your full-name",
@@ -56,11 +56,12 @@ const Registration = () => {
          return;
       }
 
-      if (!/^[A-Za-z\s]+$/.test(fullname)) {
+      if (!/^[A-Za-z\s]+$/.test(fullName)) {
          setValues({
             ...values,
             error: "Invalid characters in full name. Please use only letters and spaces.",
          });
+
          return;
       }
 
@@ -114,7 +115,7 @@ const Registration = () => {
                      <TextField
                         id="outlined-basic"
                         onChange={handleValue}
-                        name="fullname"
+                        name="fullName"
                         label="Fullname"
                         variant="outlined"
                         value={values.fullName}
