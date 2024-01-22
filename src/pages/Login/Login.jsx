@@ -17,6 +17,7 @@ import {
 import google_log from "../../assets/google.png";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { toast, Zoom } from "react-toastify";
 
 let initialValues = {
    email: "",
@@ -24,8 +25,6 @@ let initialValues = {
    loading: false,
    eye: false,
    error: "",
-   error2: "",
-   error3: "",
 };
 
 const Login = () => {
@@ -35,14 +34,24 @@ const Login = () => {
    const auth = getAuth();
    const provider = new GoogleAuthProvider();
    let navigate = useNavigate();
+   const notify = (msg) =>
+      toast.error(msg, {
+         position: "bottom-center",
+         autoClose: 3000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "colored",
+         transition: Zoom,
+      });
 
    let handleValue = (e) => {
       setValues({
          ...values,
          [e.target.name]: e.target.value,
       });
-      setEmailErr(false);
-      setPassErr(false);
    };
 
    let Handlesubmit = () => {
@@ -52,7 +61,6 @@ const Login = () => {
             ...values,
             email: "",
             error: "enter a email",
-            error2: "",
          });
          return;
       }
@@ -61,7 +69,6 @@ const Login = () => {
             ...values,
             password: "",
             error: "enter a password",
-            error2: "",
          });
          return;
       }
@@ -78,8 +85,11 @@ const Login = () => {
                password: "",
                loading: false,
             });
-
-            navigate("/home");
+            if (!user.user.emailVerified) {
+               notify("please verify you email to log in ");
+            } else {
+               navigate("/home");
+            }
          })
          .catch((error) => {
             const errorCode = error.code;
