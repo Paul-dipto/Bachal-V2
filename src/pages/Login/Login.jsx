@@ -88,7 +88,7 @@ const Login = () => {
             if (!user.user.emailVerified) {
                notify("please verify you email to log in ");
             } else {
-               navigate("/home");
+               navigate("/bachal/home");
             }
          })
          .catch((error) => {
