@@ -10,9 +10,10 @@ import {
    RiSettingsLine,
    RiLogoutBoxRLine,
 } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Rootlayout = () => {
+   const location = useLocation();
    return (
       <>
          <Grid container spacing={2}>
@@ -29,7 +30,13 @@ const Rootlayout = () => {
                      <ul>
                         <li>
                            <Link to={"/bachal/home"}>
-                              <RiHome8Line className="icon" />
+                              <RiHome8Line
+                                 className={
+                                    location.pathname == "/bachal/home"
+                                       ? "active"
+                                       : "icon"
+                                 }
+                              />
                            </Link>
                         </li>
                         <li>
